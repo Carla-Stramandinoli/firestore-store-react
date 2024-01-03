@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom'
 import { collection, getDocs, getDoc, deleteDoc, doc } from "firebase/firestore"
 import { db } from '../firebase/config'
 import Swal from 'sweetalert2'
-// import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-// import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
-// import EditIcon from '@mui/icons-material/Edit';
+import withReactContent from 'sweetalert2-react-content'
+
+
+const MySwal = withReactContent(Swal)
+
 
 function Show() {
     const [products, setProducts] = React.useState([]);
@@ -28,6 +30,28 @@ function Show() {
         const productDoc = doc(db, "products", id);
         await deleteDoc(productDoc);
         getProducts();
+    }
+
+    const confirmDelete = (id) => {
+      MySwal.fire({
+        title: '¿Elimina el producto?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) { 
+          //llamamos a la funcion para eliminar   
+          deleteProduct(id)               
+          Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
+        }
+      })    
     }
 
     useEffect(() => {
@@ -58,7 +82,7 @@ function Show() {
                       <td>{product.stock}</td>
                       <td>
                         <Link to={`/edit/${product.id}`} className="btn btn-light"><i className="fa-solid fa-pencil"></i></Link>
-                        <button className="btn btn-danger"><i className="fa-solid fa-trash"></i></button>
+                        <button onClick={() => {confirmDelete(product.id)}} className="btn btn-danger"><i className="fa-solid fa-trash"></i></button>
                       </td>
                     </tr>                
                   )) }
