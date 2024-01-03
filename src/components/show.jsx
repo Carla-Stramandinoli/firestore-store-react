@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { collection, getDocs, getDoc, deleteDoc, doc } from "firebase/firestore"
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore"
 import { db } from '../firebase/config'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
